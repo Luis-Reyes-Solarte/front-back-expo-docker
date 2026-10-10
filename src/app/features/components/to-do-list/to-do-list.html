@@ -1,1 +1,13 @@
-<p>to-do-list works!</p>
+@if (items) {
+  <ul>
+    @for (item of items; track item.id) {
+      <li>
+        <input type="checkbox" />
+        {{ item.name }}
+      </li>
+    }
+  </ul>
+} @else {
+  <h1>No items</h1>
+  <button (click)="cargarDatos()">Actualizar</button>
+}
