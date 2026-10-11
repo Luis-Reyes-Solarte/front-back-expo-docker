@@ -1,4 +1,4 @@
-@if (items) {
+@if (items.length > 0) {
   <ul>
     @for (item of items; track item.id) {
       <li>
@@ -10,4 +10,13 @@
 } @else {
   <h1>No items</h1>
   <button (click)="cargarDatos()">Actualizar</button>
+  <p>{{ error }}</p>
 }
+<p-button
+  (onClick)="information()"
+  label="Información"
+  severity="contrast"
+  variant="text"
+></p-button
+><br />
+<p-button (onClick)="confirmMSG()" label="Mensaje" severity="success" rounded="true"></p-button>
