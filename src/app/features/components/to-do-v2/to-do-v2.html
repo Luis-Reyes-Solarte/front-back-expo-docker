@@ -22,10 +22,15 @@
           <td>
             <input type="checkbox" [checked]="item.done" disabled />
           </td>
-          <td>
-            <p-button severity="info"></p-button>
-            <p-button severity="success"></p-button>
-            <p-button severity="danger"></p-button>
+          <td class="actions">
+            <p-button severity="info" icon="pi pi-eye" label="Ver" (onClick)="ver(item)"></p-button>
+            <p-button
+              severity="success"
+              icon="pi pi-pencil"
+              label="Editar"
+              (onClick)="editar(item)"
+            ></p-button>
+            <p-button severity="danger" icon="pi pi-trash" label="Eliminar"></p-button>
           </td>
         </tr>
       </ng-template>
@@ -35,3 +40,26 @@
   }
 </div>
 <p-button (onClick)="cargarDatos()" label="Actualizar" severity="success"></p-button>
+
+<p-dialog [header]="tipoModal" [(visible)]="dialogVisible" position="top">
+  <label for="name">Nombre: </label>
+  <input
+    type="text"
+    id="name"
+    name="name"
+    [disabled]="tipoModal === 'Vista previa'"
+    [(ngModel)]="elementoSeleccionado.name"
+  />
+  <br />
+  <label for="done">Done: </label>
+  <input
+    type="checkbox"
+    id="done"
+    name="done"
+    [disabled]="tipoModal === 'Vista previa'"
+    [(ngModel)]="elementoSeleccionado.done"
+  />
+  <br />
+  <p-button severity="success" label="Aceptar" (onClick)="guardarOCerrar()"></p-button>
+  <p-button severity="danger" label="Cancelar" (click)="dialogVisible = false"></p-button>
+</p-dialog>
