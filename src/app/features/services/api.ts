@@ -19,4 +19,7 @@ export class Api {
   updateList(id: number, list: ListModel): Observable<ListModel> {
     return this.httpClient.put<ListModel>(`${this.url}${id}/`, list);
   }
+  deleteList(id: number): Observable<void> {
+    return this.httpClient.delete<void>(`${this.url}${id}/`);
+  }
 }
