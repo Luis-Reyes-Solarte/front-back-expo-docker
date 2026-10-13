@@ -1,11 +1,252 @@
-.card {
-  width: 50%;
-  margin: 0 auto;
-  min-width: 10%;
+:host {
+  display: block;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  box-sizing: border-box;
+  background:
+    radial-gradient(circle at 0% 0%, #e0e7ff 0%, transparent 45%),
+    radial-gradient(circle at 100% 0%, #cffafe 0%, transparent 40%),
+    linear-gradient(160deg, #f8fafc 0%, #f1f5f9 100%);
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  color: #1e293b;
 }
-.actions {
-  display: flex;
-  justify-content: center;
+
+.todo {
+  max-width: 68rem;
+  margin: 0 auto;
+
+  &__card {
+    background: #ffffff;
+    border: 1px solid rgba(99, 102, 241, 0.12);
+    border-radius: 1.25rem;
+    overflow: hidden;
+    box-shadow:
+      0 24px 48px -24px rgba(79, 70, 229, 0.35),
+      0 8px 20px -16px rgba(15, 23, 42, 0.25);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 1.5rem 1.75rem;
+    background: linear-gradient(120deg, #4f46e5 0%, #7c3aed 55%, #0ea5e9 130%);
+    color: #ffffff;
+  }
+
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  &__logo {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    flex-shrink: 0;
+    border-radius: 1rem;
+    font-size: 1.4rem;
+    background: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    backdrop-filter: blur(4px);
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+  }
+
+  &__subtitle {
+    margin: 0.2rem 0 0;
+    font-size: 0.9rem;
+    opacity: 0.85;
+  }
+
+  &__header-actions {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  &__alert {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 1.25rem 1.75rem 0;
+    padding: 0.85rem 1rem;
+    border-radius: 0.85rem;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #b91c1c;
+    font-size: 0.9rem;
+
+    i {
+      font-size: 1.1rem;
+    }
+  }
+
+  &__body {
+    padding: 1.5rem 1.75rem 1.75rem;
+  }
+
+  &__id {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    color: #64748b;
+  }
+
+  &__name {
+    font-weight: 500;
+    color: #0f172a;
+
+    &--done {
+      color: #94a3b8;
+      text-decoration: line-through;
+    }
+  }
+
+  &__row-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+  }
+
+  &__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.6rem;
+    padding: 3.5rem 1rem;
+
+    h2 {
+      margin: 0.5rem 0 0;
+      font-size: 1.2rem;
+      color: #1e293b;
+    }
+
+    p {
+      margin: 0 0 0.75rem;
+      color: #64748b;
+    }
+  }
+
+  &__empty-icon {
+    display: grid;
+    place-items: center;
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 50%;
+    font-size: 2rem;
+    color: #6366f1;
+    background: #eef2ff;
+  }
+}
+
+.pill {
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.35rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+
+  i {
+    font-size: 0.75rem;
+  }
+
+  &--done {
+    color: #047857;
+    background: #d1fae5;
+  }
+
+  &--pending {
+    color: #b45309;
+    background: #fef3c7;
+  }
+}
+
+.todo-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-top: 0.25rem;
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    &--inline {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    input[pInputText] {
+      width: 100%;
+    }
+  }
+}
+
+/* Estilos de la tabla (atraviesan el encapsulado del componente p-table). */
+:host ::ng-deep {
+  .todo-table {
+    .p-datatable-table-container {
+      border: 1px solid #e2e8f0;
+      border-radius: 0.9rem;
+      overflow: hidden;
+    }
+
+    .p-datatable-thead > tr > th {
+      background: #f8fafc;
+      color: #475569;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-color: #e2e8f0;
+      padding: 0.9rem 1rem;
+    }
+
+    .p-datatable-tbody > tr {
+      transition: background-color 0.15s ease;
+
+      > td {
+        padding: 0.85rem 1rem;
+        border-color: #eef2f7;
+        vertical-align: middle;
+      }
+
+      &:nth-child(even) {
+        background: #fcfdff;
+      }
+
+      &:hover {
+        background: #eef2ff;
+      }
+    }
+
+    .p-paginator {
+      border: none;
+      padding-top: 1rem;
+      background: transparent;
+    }
+  }
 }

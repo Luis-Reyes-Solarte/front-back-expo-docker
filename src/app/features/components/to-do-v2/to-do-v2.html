@@ -1,65 +1,177 @@
-<div class="card">
-  @if (items.length > 0) {
-    <p-table
-      [value]="items"
-      [showGridlines]="isShowGridlines"
-      [paginator]="isPaginator"
-      [rows]="rows"
-      [rowsPerPageOptions]="rowsPerPageOptions"
-    >
-      <ng-template pTemplate="header">
-        <tr>
-          <th>Id</th>
-          <th>Name</th>
-          <th>Done</th>
-          <th>Actions</th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-item>
-        <tr>
-          <td>{{ item.id }}</td>
-          <td>{{ item.name }}</td>
-          <td>
-            <input type="checkbox" [checked]="item.done" disabled />
-          </td>
-          <td class="actions">
-            <p-button severity="info" icon="pi pi-eye" label="Ver" (onClick)="ver(item)"></p-button>
-            <p-button
-              severity="success"
-              icon="pi pi-pencil"
-              label="Editar"
-              (onClick)="editar(item)"
-            ></p-button>
-            <p-button severity="danger" icon="pi pi-trash" label="Eliminar"></p-button>
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
-  } @else {
-    <h1>No items</h1>
-  }
-</div>
-<p-button (onClick)="cargarDatos()" label="Actualizar" severity="success"></p-button>
+<div class="todo">
+  <div class="todo__card">
+    <header class="todo__header">
+      <div class="todo__brand">
+        <span class="todo__logo"><i class="pi pi-check-square"></i></span>
+        <div>
+          <h1 class="todo__title">Mi Lista de Tareas</h1>
+          <p class="todo__subtitle">
+            {{ items().length }} {{ items().length === 1 ? 'tarea' : 'tareas' }} en total
+          </p>
+        </div>
+      </div>
+      <div class="todo__header-actions">
+        <p-button
+          label="Actualizar"
+          icon="pi pi-refresh"
+          severity="secondary"
+          [outlined]="true"
+          (onClick)="cargarDatos()"
+        ></p-button>
+        <p-button
+          label="Agregar"
+          icon="pi pi-plus"
+          severity="success"
+          (onClick)="nuevo()"
+        ></p-button>
+      </div>
+    </header>
 
-<p-dialog [header]="tipoModal" [(visible)]="dialogVisible" position="top">
-  <label for="name">Nombre: </label>
-  <input
-    type="text"
-    id="name"
-    name="name"
-    [disabled]="tipoModal === 'Vista previa'"
-    [(ngModel)]="elementoSeleccionado.name"
-  />
-  <br />
-  <label for="done">Done: </label>
-  <input
-    type="checkbox"
-    id="done"
-    name="done"
-    [disabled]="tipoModal === 'Vista previa'"
-    [(ngModel)]="elementoSeleccionado.done"
-  />
-  <br />
-  <p-button severity="success" label="Aceptar" (onClick)="guardarOCerrar()"></p-button>
-  <p-button severity="danger" label="Cancelar" (click)="dialogVisible = false"></p-button>
+    @if (error()) {
+      <div class="todo__alert">
+        <i class="pi pi-exclamation-triangle"></i>
+        <span>{{ error() }}</span>
+      </div>
+    }
+
+    <div class="todo__body">
+      @if (items().length > 0) {
+        <p-table
+          [value]="items()"
+          [showGridlines]="isShowGridlines"
+          [paginator]="isPaginator"
+          [rows]="rows"
+          [rowsPerPageOptions]="rowsPerPageOptions"
+          styleClass="todo-table"
+          [tableStyle]="{ 'min-width': '48rem' }"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th class="col-id">Id</th>
+              <th>Nombre</th>
+              <th class="col-status">Estado</th>
+              <th class="col-actions">Acciones</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-item>
+            <tr>
+              <td class="col-id">
+                <span class="todo__id">#{{ item.id }}</span>
+              </td>
+              <td class="todo__name" [class.todo__name--done]="item.done">
+                {{ item.name }}
+              </td>
+              <td class="col-status">
+                @if (item.done) {
+                  <span class="pill pill--done">
+                    <i class="pi pi-check"></i>
+                    Completado
+                  </span>
+                } @else {
+                  <span class="pill pill--pending">
+                    <i class="pi pi-clock"></i>
+                    Pendiente
+                  </span>
+                }
+              </td>
+              <td class="col-actions">
+                <div class="todo__row-actions">
+                  <p-button
+                    icon="pi pi-eye"
+                    severity="info"
+                    [text]="true"
+                    [rounded]="true"
+                    ariaLabel="Ver"
+                    (onClick)="ver(item)"
+                  ></p-button>
+                  <p-button
+                    icon="pi pi-pencil"
+                    severity="success"
+                    [text]="true"
+                    [rounded]="true"
+                    ariaLabel="Editar"
+                    (onClick)="editar(item)"
+                  ></p-button>
+                  <p-button
+                    icon="pi pi-trash"
+                    severity="danger"
+                    [text]="true"
+                    [rounded]="true"
+                    ariaLabel="Eliminar"
+                    (onClick)="eliminarDato(item)"
+                  ></p-button>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      } @else {
+        <div class="todo__empty">
+          <span class="todo__empty-icon"><i class="pi pi-inbox"></i></span>
+          <h2>No hay tareas</h2>
+          <p>Agrega tu primera tarea para empezar a organizarte.</p>
+          <p-button
+            label="Agregar tarea"
+            icon="pi pi-plus"
+            severity="success"
+            (onClick)="nuevo()"
+          ></p-button>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+<p-dialog
+  [header]="tipoModal"
+  [visible]="dialogVisible()"
+  (visibleChange)="dialogVisible.set($event)"
+  [modal]="true"
+  [style]="{ width: '30rem' }"
+  position="top"
+  styleClass="todo-dialog"
+>
+  <div class="todo-form">
+    <div class="todo-form__field">
+      <label for="name">Nombre</label>
+      <input
+        pInputText
+        id="name"
+        name="name"
+        placeholder="Escribe el nombre de la tarea"
+        [disabled]="esVistaPrevia"
+        [(ngModel)]="elementoSeleccionado.name"
+      />
+    </div>
+    <div class="todo-form__field todo-form__field--inline">
+      <label for="done">Completado</label>
+      <p-checkbox
+        inputId="done"
+        name="done"
+        [binary]="true"
+        [disabled]="esVistaPrevia"
+        [(ngModel)]="elementoSeleccionado.done"
+      ></p-checkbox>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      label="Cancelar"
+      icon="pi pi-times"
+      severity="secondary"
+      [text]="true"
+      (onClick)="dialogVisible.set(false)"
+    ></p-button>
+    @if (!esVistaPrevia) {
+      <p-button
+        label="Aceptar"
+        icon="pi pi-check"
+        severity="success"
+        [loading]="guardando()"
+        [disabled]="!elementoSeleccionado.name.trim()"
+        (onClick)="guardarOCerrar()"
+      ></p-button>
+    }
+  </ng-template>
 </p-dialog>
